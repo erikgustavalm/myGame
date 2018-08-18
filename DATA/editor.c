@@ -71,10 +71,12 @@ void initEditor(char* level)
 	
 }
 
+
 void createNonSolid(int x, int y, int end, int cx, int cy)
 {
-	if (nonSolidSize > nonSolidMaxSize) {
-		nonSolidMaxSize *= 2;
+	if (nonSolidSize >= nonSolidMaxSize) {
+		nonSolidMaxSize += 10;
+		printf("nonSolidMaxSize: %d\n", nonSolidMaxSize);
 		arrayNonSolid = realloc(arrayNonSolid, sizeof(struct Tile)*nonSolidMaxSize);
 
 		if (arrayNonSolid == NULL) {
@@ -102,8 +104,8 @@ void createNonSolid(int x, int y, int end, int cx, int cy)
 
 void createSolid(int x, int y, int end, int cx, int cy)
 {
-	if (solidSize > solidMaxSize) {
-		solidMaxSize *= 2;
+	if (solidSize >= solidMaxSize) {
+		solidMaxSize += 10;
 		arraySolid = realloc(arraySolid, sizeof(struct Tile)*solidMaxSize);
 	}
 	
@@ -130,6 +132,9 @@ void gameloop()
 	selected = nonsolid;
 
 	loadTextures();
+
+	activeTileDest.w = TILE_SIZE;
+	activeTileDest.h = TILE_SIZE;
 	
 	activeTileCrop.x = 0;
 	activeTileCrop.y = 0;
@@ -138,6 +143,15 @@ void gameloop()
 	
 	running = 1;
 	showCollection = 0;
+
+	corrx = 0;
+	corry = 0;
+
+	camLeft = 0;
+	camRight = 0;
+	camUp = 0;
+	camDown = 0;
+	
 	int FPS = 0;
 
 	printf("starting up...\n");
@@ -173,12 +187,17 @@ void checkevent()
 				   case SDLK_SPACE:
 					   if (showCollection) {
 						   showCollection = 0;
-						   printf("Showing collection\n");
-					   }else {
+						   printf("closing collection\n");
+					   } else {
 						   showCollection = 1;
-						   printf("Closing collection\n");
+						   printf("Showing collection\n");
 					   }
 					   break;
+					   
+				   case SDLK_RETURN:
+					   saveToFile();
+					   break;
+					   
 				   case SDLK_j:
 					   selected = solid;
 					   printf("selected: solid\n");
@@ -193,21 +212,93 @@ void checkevent()
 					   selected = enemy;
 					   printf("selected: enemy\n");
 					   break;
+
+				   case SDLK_w:
+					   camUp = 1;
+					   break;
+
+				   case SDLK_s:
+					   camDown = 1;
+					   break;
+
+				   case SDLK_a:
+					   camLeft = 1;
+					   break;
+
+				   case SDLK_d:
+					   camRight = 1;
+					   break;
+
+				   case SDLK_h:
+					   HELP();
+					   break;
 			
 			      default:
 					  break;
 			   }
-		    case SDL_MOUSEBUTTONDOWN:
-				if (selected == solid ) {
-					
-				}
-				else if (selected == nonsolid) {
-					
-				}
-				else if (selected == enemy) {
-					
+			   break;
+
+			case SDL_KEYUP:
+				switch (event.key.keysym.sym) {
+
+					case SDLK_w:
+						camUp = 0;
+						break;
+
+					case SDLK_s:
+						camDown = 0;
+						break;
+
+					case SDLK_a: 
+						camLeft = 0;	
+						break;
+
+					case SDLK_d:
+						camRight = 0;
+						break;
+						
+					default:
+						break;
 				}
 				break;
+				
+		    case SDL_MOUSEBUTTONDOWN:
+				if (selected == solid ) {
+
+					int diffx = mouse_x % TILE_CROP_SIZE;
+		   			int diffy = mouse_y % TILE_CROP_SIZE;
+	   				int newx = mouse_x - diffx;
+   					int newy = mouse_y - diffy;
+
+					if (showCollection) {
+
+						setActiveCrop(newx, newy);
+						showCollection = 0;
+					}else {
+						createSolid(newx, newy, 0, activeTileCrop.x, activeTileCrop.y);
+					}
+				} else if (selected == nonsolid) {
+
+					int diffx = mouse_x % TILE_CROP_SIZE;
+					int diffy = mouse_y % TILE_CROP_SIZE;
+				  	int newx = mouse_x - diffx;
+			   		int newy = mouse_y - diffy;
+					
+					if (showCollection) {			
+						setActiveCrop(newx, newy);
+						showCollection = 0;
+					}else {
+						createNonSolid(newx, newy, 0, activeTileCrop.x, activeTileCrop.y); 
+					}
+				} else if (selected == enemy) {
+					if (showCollection) {
+						
+					}else {
+						
+					}
+				}
+				break;
+				
 		    default:
 				break;
 		}
@@ -216,7 +307,61 @@ void checkevent()
 
 void update()
 {
+	SDL_GetMouseState(&mouse_x, &mouse_y);
 	
+	activeTileDest.x = mouse_x - (TILE_SIZE / 2);
+	activeTileDest.y = mouse_y - (TILE_SIZE / 2);
+
+	if (!showCollection) {
+		SDL_ShowCursor(SDL_DISABLE);
+	}else if (showCollection) {
+		SDL_ShowCursor(SDL_ENABLE);
+	}
+
+	if (camLeft){ 
+		movement(TILE_SIZE,0);
+		corrx += TILE_SIZE;
+		
+	}else if (camRight) {
+
+		movement(-TILE_SIZE,0);
+		corrx -= TILE_SIZE;
+		
+	}
+	
+	if (camUp) {
+		
+		movement(0,TILE_SIZE);
+		corry += TILE_SIZE;
+		
+	}else if (camDown) {
+		
+		movement(0,-TILE_SIZE);
+		corry -= TILE_SIZE;
+		
+	}
+}
+
+void movement(int x, int y)
+{
+	for (int i = 0; i < nonSolidSize; i++) {
+		arrayNonSolid[i].pos.x += x;
+		arrayNonSolid[i].pos.y += y;
+		arrayNonSolid[i].endpos += x;
+	}
+	for (int i = 0; i < solidSize; i++) {
+		arraySolid[i].pos.x += x;
+		arraySolid[i].pos.y += y;
+		arrayNonSolid[i].endpos += x;
+	}
+}
+void HELP()
+{
+
+	printf("ActiveTileCrop\n  x: %d\n  y: %d\n  w: %d\n  h: %d\n", activeTileCrop.x, activeTileCrop.y,
+		   activeTileCrop.w, activeTileCrop.h);
+	printf("ActiveTileDest\n  x: %d\n  y: %d\n  w: %d\n  h: %d\n", activeTileDest.x, activeTileDest.y,
+		   activeTileDest.w, activeTileDest.h);
 }
 
 void render()
@@ -224,7 +369,10 @@ void render()
 	SDL_RenderClear(gRender);
 
 	for (int i = 0; i < nonSolidSize; i++) {
-		SDL_RenderCopy(gRender, nonSolidSprite, &arrayNonSolid[i].pos, &arrayNonSolid[i].crop);
+		SDL_RenderCopy(gRender, nonSolidSprite, &arrayNonSolid[i].crop, &arrayNonSolid[i].pos);
+	}
+	for (int i = 0; i < solidSize; i++) {
+		SDL_RenderCopy(gRender, solidSprite, &arraySolid[i].crop, &arraySolid[i].pos);
 	}
 
 	if (showCollection) {
@@ -236,8 +384,25 @@ void render()
 		}else if (selected == enemy){
 			SDL_RenderCopy(gRender, enemySprite, NULL, &enemyWH);
 		}
+		
+	} else {
+		
+		if (selected == nonsolid) {
+			SDL_RenderCopy(gRender, nonSolidSprite, &activeTileCrop, &activeTileDest);
+		} else if (selected == solid) {
+			SDL_RenderCopy(gRender, solidSprite, &activeTileCrop, &activeTileDest);
+		} else if (selected == enemy) {
+			SDL_RenderCopy(gRender, enemySprite, &activeTileCrop, &activeTileDest);
+		}
 	}
+	
 	SDL_RenderPresent(gRender);
+}
+
+void setActiveCrop(int x, int y)
+{
+	activeTileCrop.x = x;
+	activeTileCrop.y = y;
 }
 
 void loadTextures()
@@ -292,15 +457,15 @@ void loadTextures()
 
 	nonSolidWH.x = 0;
 	nonSolidWH.y = 0;
-	SDL_QueryTexture(nonSolidSprite, NULL, NULL, nonSolidWH.w, nonSolidWH.h);
+	SDL_QueryTexture(nonSolidSprite, NULL, NULL, &nonSolidWH.w, &nonSolidWH.h);
 
 	solidWH.x = 0;
 	solidWH.y = 0;
-	SDL_QueryTexture(solidSprite, NULL, NULL, solidWH.w, solidWH.h);
+	SDL_QueryTexture(solidSprite, NULL, NULL, &solidWH.w, &solidWH.h);
 
 	enemyWH.x = 0;
 	enemyWH.y = 0;
-	SDL_QueryTexture(enemySprite, NULL, NULL, enemyWH.w, enemyWH.h);
+	SDL_QueryTexture(enemySprite, NULL, NULL, &enemyWH.w, &enemyWH.h);
 }
 
 void saveToFile()
@@ -310,12 +475,12 @@ void saveToFile()
 		printf("%s:could not be open for saving\n", filepath );
 	}else {
 	    for (int i = 0; i < nonSolidSize; i++) {
-			fprintf(file, "%d %d %d %d %d %d\n", 0, arrayNonSolid[i].pos.x, arrayNonSolid[i].pos.y, arrayNonSolid[i].endpos,
-					arrayNonSolid[i].crop.x, arrayNonSolid[i].crop.y);
+			fprintf(file, "%d %d %d %d %d %d\n", 0, arrayNonSolid[i].pos.x - corrx, arrayNonSolid[i].pos.y - corry,
+					arrayNonSolid[i].endpos - corrx, arrayNonSolid[i].crop.x, arrayNonSolid[i].crop.y);
 		}
 		for (int i = 0; i < solidSize; i++) {
-			fprintf(file, "%d %d %d %d %d %d\n", 1, arraySolid[i].pos.x, arraySolid[i].pos.y, arraySolid[i].endpos,
-					arraySolid[i].crop.x, arraySolid[i].crop.y);
+			fprintf(file, "%d %d %d %d %d %d\n", 1, arraySolid[i].pos.x - corrx, arraySolid[i].pos.y - corry,
+					arraySolid[i].endpos - corrx, arraySolid[i].crop.x, arraySolid[i].crop.y);
 		}
 		fclose(file);
 		printf("saved to file: %s\n", filepath);

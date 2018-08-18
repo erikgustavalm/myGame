@@ -56,7 +56,7 @@ int solidSize;
 
 char filepath[30];
 
-int checkIfTaken(int x, int y);
+
 
 void initEditor(char* level);
 void loadTextures();
