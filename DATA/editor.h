@@ -12,34 +12,49 @@
 
 struct Tile
 {
-		SDL_Rect crop;
-		SDL_Rect pos;
+	SDL_Rect crop;
+	SDL_Rect pos;
+	int endpos;
 };
 enum Selection {solid, nonsolid, enemy};
 enum Selection selected;
 
 int running;
+int showCollection;
+
 SDL_Window* gWindow;
 SDL_Renderer* gRender;
-SDL_Texture* nonSolidSprite;
 
-SDL_Rect activeTile;
+SDL_Texture* nonSolidSprite;
+SDL_Rect nonSolidWH;
+SDL_Texture* solidSprite;
+SDL_Rect solidWH;
+SDL_Texture* enemySprite;
+SDL_Rect enemyWH;
+
+SDL_Rect activeTileDest;
+SDL_Rect activeTileCrop;
+
 
 struct Tile* arrayNonSolid;
 int nonSolidMaxSize;
 int nonSolidSize;
+
 struct Tile* arraySolid;
 int solidMaxSize;
 int solidSize;
 
+char filepath[30];
+
 void initEditor(char* level);
 void loadTextures();
-void createNonSolid(int x, int y, int cx, int cy);
-void createSolid(int x, int y, int cx, int cy);
+void createNonSolid(int x, int y, int end, int cx, int cy);
+void createSolid(int x, int y, int end, int cx, int cy);
 void gameloop();
 void update();
 void checkevent();
 void render();
+void saveToFile();
 void quit();
 
 #endif
