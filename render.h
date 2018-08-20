@@ -24,5 +24,9 @@ SDL_Texture* loadText(char* filepath);
 void killRender();
 void render();
 void drawPlayer();
-void animatePlayer();
+void animatePlayerRunning();
+void animatePlayerFalling();
+void animatePlayerJumping();
+void animatePlayerLongStill();
+
 #endif

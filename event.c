@@ -19,13 +19,18 @@ void gameEvent()
 						helpFunction();
 						break;
 					case SDLK_LEFT:
-						if (playerStatus == still) {
+						if (playerStatus == still || playerStatus == longstill) {
 							playerStatus = left;
 						}
 						break;
 					case SDLK_RIGHT:
-						if (playerStatus == still) {
+						if (playerStatus == still || playerStatus == longstill) {
 							playerStatus = right;
+						}
+						break;
+					case SDLK_UP:
+						if (playerCondition == onground) {
+							playerJump();
 						}
 						break;
 					default:

@@ -10,7 +10,7 @@
 
 enum Option {start, quit};
 enum Option option;
-enum PlayerStatus {left, right, still};
+enum PlayerStatus {left, right, still, longstill};
 enum PlayerStatus playerStatus;
 enum PlayerCondition {onground, jumping, falling};
 enum PlayerCondition playerCondition;
@@ -20,9 +20,13 @@ SDL_Rect playerCrop;
 
 int playerSpeedX;
 int playerSpeedY;
+int maxHeight;
 
 int initLogic();
 
+int stillTimer;
+void standingStillForLong();
+void playerJump();
 void playerMovement();
 void checkCollision();
 void updateLogic();

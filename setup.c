@@ -3,12 +3,12 @@
 
 void helpFunction()
 {
-	for (int i = 0; i < sizeNonSolid; i++) {
-		printf("arrayNonSolid[%d]\n pos.x: %d\n pos.y: %d\n pos.w: %d\n pos.w: %d\n pos.h: %d\n",
-			   i, arrayNonSolid[i].pos.x, arrayNonSolid[i].pos.y, arrayNonSolid[i].pos.w, arrayNonSolid[i].pos.h);
-   		printf("arrayNonSolid[%d]\n crop.x: %d\n crop.y: %d\n crop.w: %d\n crop.w: %d\n crop.h: %d\n",
-			   i, arrayNonSolid[i].crop.x, arrayNonSolid[i].crop.y, arrayNonSolid[i].crop.w, arrayNonSolid[i].crop.h);
+	if (playerCondition == onground) {		
+		printf("player onground\n");
 	}
+	playerPos.y = 32;
+	playerPos.x = 32;
+	
 }
 
 void createSolid(int x, int y, int end, int cx, int cy)

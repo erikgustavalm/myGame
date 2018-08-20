@@ -13,7 +13,41 @@ void render()
 	SDL_RenderPresent(gRender);
 }
 
-void animatePlayer()
+void animatePlayerFalling()
+{
+	playerCrop.x = PLAYER_TILE * 13;
+}
+
+void animatePlayerJumping()
+{
+    // 11 eller 12
+
+	if (playerPos.y > maxHeight + 64 ) {
+		playerCrop.x = PLAYER_TILE * 11;
+	} else {
+		playerCrop.x = PLAYER_TILE * 12;
+	}
+}
+
+void animatePlayerLongStill()
+{
+	if (3 < playerTimer < 10) {
+		if (playerTimer < 5) {
+			playerCrop.x = PLAYER_TILE * 9;
+		}
+		if (playerTimer > 5) {
+			playerCrop.x = PLAYER_TILE * 10;
+		}
+		if (playerTimer == 9) {
+			playerTimer = 0;
+		}
+	} else {
+		playerCrop.x = 0;
+	}
+	playerTimer++;
+}
+
+void animatePlayerRunning()
 {
 	if (playerTimer < 2) {		
 		playerTimer++;
@@ -22,27 +56,35 @@ void animatePlayer()
 
 		playerCrop.x += PLAYER_TILE;
 	
-		if (playerCrop.x == PLAYER_TILE * 9) {
+		if (playerCrop.x >= PLAYER_TILE * 9) {
 			playerCrop.x = PLAYER_TILE;
 		}
 	}
 }
+
 void drawPlayer()
 {
 	if (playerStatus == left) {
 		if (playerCrop.y != 64) {
 			playerCrop.y = 64;
 		}
-		animatePlayer();
+		animatePlayerRunning();
 		
 	} else if (playerStatus == right) {
 		if (playerCrop.y != 0) {
 			playerCrop.y = 0;
 		}
-		animatePlayer();
+		animatePlayerRunning();
 		
 	} else if (playerStatus == still) {
 		playerCrop.x = 0;
+	} else if (playerStatus == longstill) {
+		animatePlayerLongStill();
+	}
+	if (playerCondition == falling) {
+		animatePlayerFalling();
+	} else if (playerCondition == jumping) {
+		animatePlayerJumping();
 	}
 	
 	
