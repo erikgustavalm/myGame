@@ -1,0 +1,10 @@
+#ifndef _GAME_H_
+#define _GAME_H_
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_Image.h>
+#include <stdio.h>
+
+
+void initGame();
+#endif

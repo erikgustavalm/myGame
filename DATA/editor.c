@@ -125,9 +125,45 @@ void createSolid(int x, int y, int end, int cx, int cy)
 
 }
 
-void deleteTiles(int x, int y)
+int deleteTiles(int x, int y)
 {
-    printf("Deleting tiles at x: %d - y: %d\n", x, y );
+    
+	int indexOfTaken = 0;
+	int isTaken = 0;
+	
+// First checking if the position contains a solid tile and delete that, and 2nd a nonsolid tile.
+	
+	for (int i = 0; i < solidSize; i++) {
+		if (arraySolid[i].pos.x == x && arraySolid[i].pos.y == y) {
+			indexOfTaken = i;
+			isTaken = 1;
+			break;
+		}
+	}
+	if (isTaken) {
+		for (int i = indexOfTaken; i <= solidSize; i++) {
+			arraySolid[i] = arraySolid[i+1];
+		}
+		solidSize--;
+		return 0;
+	}
+	
+	for (int i = 0; i < nonSolidSize; i++) {
+		if (arrayNonSolid[i].pos.x == x && arrayNonSolid[i].pos.y == y) {
+			indexOfTaken = i;
+			isTaken = 1;
+			break;
+		}
+	}
+	if (isTaken) {
+		for (int i = indexOfTaken; i <= nonSolidSize; i++) {
+			arrayNonSolid[i] = arrayNonSolid[i+1];
+		}
+		nonSolidSize--;
+		return 0;
+	}
+
+	return 0;
 }
 
 void gameloop()
@@ -330,6 +366,7 @@ void update()
 		SDL_ShowCursor(SDL_ENABLE);
 	}
 */
+	
 	if (camLeft){ 
 		movement(TILE_SIZE,0);
 		corrx += TILE_SIZE;

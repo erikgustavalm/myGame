@@ -1,0 +1,11 @@
+#include "setup.h"
+
+int setupSDL()
+{
+	
+}
+
+void setupQuit()
+{
+	
+}

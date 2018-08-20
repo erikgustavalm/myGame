@@ -62,13 +62,14 @@ char filepath[30];
 
 
 
+int deleteTiles(int x, int y);
+
 void initEditor(char* level);
 void loadTextures();
 void createNonSolid(int x, int y, int end, int cx, int cy);
 void createSolid(int x, int y, int end, int cx, int cy);
 void setActiveCrop(int x, int y);
 void movement(int x, int y);
-void deleteTiles(int x, int y);
 void HELLP();
 void gameloop();
 void update();
