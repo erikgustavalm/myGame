@@ -102,6 +102,22 @@ void drawPlayer()
 	SDL_RenderCopy(gRender, playerSprite, &playerCrop, &playerPos);
 }
 
+void animateObjects()
+{
+	for (int i = 0; i < sizeAnimated; i++) {
+		if (arrayAnimated[i].timer < arrayAnimated[i].speed) {
+			arrayAnimated[i].timer++;
+		} else {
+			arrayAnimated[i].crop.y += arrayAnimated[i].crop.h;
+			if (arrayAnimated[i].crop.y == TILE_CROP_H * 5) {
+				arrayAnimated[i].crop.y = 0;
+			}
+			arrayAnimated[i].timer = 0;
+		}
+		SDL_RenderCopy(gRender, animationSprite, &arrayAnimated[i].crop, &arrayAnimated[i].pos);
+	}
+}
+
 void drawGame()
 {
 	for (int i = 0; i < sizeNonSolid; i++) {
@@ -110,7 +126,7 @@ void drawGame()
 	for (int i = 0; i < sizeSolid; i++) {
 		SDL_RenderCopy(gRender, solidSprite, &arraySolid[i].crop, &arraySolid[i].pos);
 	}
-	
+	animateObjects();
 	drawPlayer();
 }
 
@@ -159,6 +175,10 @@ int loadTextures()
 	if (playerSprite == NULL) {
 		return 0;
 	}
+	animationSprite= loadText("DATA/animation.png");
+	if (animationSprite == NULL) {
+		return 0;
+	}
 	return 1;
 }
 
@@ -186,6 +206,8 @@ int initRender()
 
 void killRender()
 {
+	SDL_DestroyTexture(animationSprite);
+	animationSprite = NULL;
 	SDL_DestroyTexture(playerSprite);
 	playerSprite = NULL;
 	SDL_DestroyTexture(nonSolidSprite);

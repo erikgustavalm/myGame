@@ -11,6 +11,33 @@ void helpFunction()
 	
 }
 
+void createAnimated(int x, int y, int speed, int cx, int cy)
+{
+	if (sizeAnimated == maxSizeAnimated) {
+		maxSizeAnimated += 10;
+		arrayAnimated = realloc(arrayAnimated, sizeof(struct Animated) * maxSizeAnimated);
+		if (arrayAnimated == NULL) {
+			printf("mem realloc for arrayAnimated failed\n");
+		}
+	}
+	struct Animated new;
+	new.pos.x = x;
+	new.pos.y = y;
+	new.pos.w = TILE_W;
+	new.pos.h = TILE_H;
+
+	new.crop.x = cx;
+	new.crop.y = cy;
+	new.crop.w = TILE_CROP_W;
+	new.crop.h = TILE_CROP_H;
+
+	new.speed = speed;
+	new.timer = 0;
+
+	arrayAnimated[sizeAnimated] = new;
+	sizeAnimated++;
+}
+
 void createSolid(int x, int y, int end, int cx, int cy)
 {
 	if (sizeSolid == maxSizeSolid) {
@@ -96,6 +123,9 @@ int loadLevel()
 				case 1:
 					createSolid(xpos, ypos, endpos, cropx, cropy);
 					break;
+				case 2:
+					createAnimated(xpos, ypos, endpos, cropx, cropy);
+					break;
 				default:
 					break;
 			}
@@ -128,6 +158,13 @@ int setupSDL()
 		if (arraySolid == NULL) {
 			printf("init mem alloc arraySolid failed\n");
 		}
+
+		sizeAnimated= 0;
+		maxSizeAnimated= 30;
+		arrayAnimated = malloc(sizeof(struct Animated) * maxSizeAnimated);
+		if (arrayAnimated == NULL) {
+			printf("init mem alloc arrayAnimated failed\n");
+		}
 		
 		return 1;
 	}
@@ -138,6 +175,9 @@ int setupSDL()
 
 void setupQuit()
 {
+	free(arrayAnimated);
+	arrayAnimated = NULL;
+	
 	free(arrayNonSolid);
 	arrayNonSolid = NULL;
 

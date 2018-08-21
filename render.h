@@ -11,6 +11,7 @@ SDL_Renderer* gRender;
 SDL_Texture* playerSprite;
 SDL_Texture* nonSolidSprite;
 SDL_Texture* solidSprite;
+SDL_Texture* animationSprite;
 SDL_Texture* menusprite;
 SDL_Rect menuPos;
 
@@ -24,6 +25,7 @@ SDL_Texture* loadText(char* filepath);
 void killRender();
 void render();
 void drawPlayer();
+void animateObjects();
 void animatePlayerRunning();
 void animatePlayerFalling();
 void animatePlayerJumping();

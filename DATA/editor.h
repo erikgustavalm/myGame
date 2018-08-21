@@ -17,7 +17,7 @@ struct Tile
 	int endpos;
 };
 
-enum Selection {solid, nonsolid, enemy, erase};
+enum Selection {solid, nonsolid, enemy, animated, erase};
 enum Selection selected;
 
 int running;
@@ -41,6 +41,8 @@ SDL_Texture* solidSprite;
 SDL_Rect solidWH;
 SDL_Texture* enemySprite;
 SDL_Rect enemyWH;
+SDL_Texture* animationSprite;
+SDL_Rect animationWH;
 SDL_Texture* editorSprite;
 SDL_Rect eraserSymbol;
 
@@ -58,6 +60,10 @@ struct Tile* arraySolid;
 int solidMaxSize;
 int solidSize;
 
+struct Tile* arrayAnimated;
+int animatedMaxSize;
+int animatedSize;
+
 char filepath[30];
 
 
@@ -68,6 +74,7 @@ void initEditor(char* level);
 void loadTextures();
 void createNonSolid(int x, int y, int end, int cx, int cy);
 void createSolid(int x, int y, int end, int cx, int cy);
+void createAnimated(int x, int y, int speed, int cx, int cy);
 void setActiveCrop(int x, int y);
 void movement(int x, int y);
 void HELLP();

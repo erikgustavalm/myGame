@@ -25,6 +25,18 @@ struct NonSolid
 
 };
 
+struct Animated
+{
+	SDL_Rect pos;
+	SDL_Rect crop;
+	int timer;
+	int speed;
+};
+
+struct Animated* arrayAnimated;
+int sizeAnimated;
+int maxSizeAnimated;
+
 struct Solid* arraySolid;
 int sizeSolid;
 int maxSizeSolid;
@@ -42,5 +54,6 @@ void helpFunction();
 void setupQuit();
 void createNonSolid(int x, int y, int cx, int cy);
 void createSolid(int x, int y, int end, int cx, int cy);
+void createAnimated(int x, int y, int speed, int cx, int cy);
 
 #endif

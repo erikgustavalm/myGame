@@ -20,6 +20,10 @@ void initEditor(char* level)
 	solidSize = 0;
 	solidMaxSize = 20;
 	arraySolid = malloc(sizeof(struct Tile) * solidMaxSize);
+
+	animatedSize = 0;
+	animatedMaxSize = 20;
+	arrayAnimated = malloc(sizeof(struct Tile) * animatedMaxSize);
 	
 	while (!feof(file)) {
 
@@ -37,6 +41,9 @@ void initEditor(char* level)
 					break;
 				case 1:
 					createSolid(posx, posy, endx, cropx, cropy);
+					break;
+				case 2:
+					createAnimated(posx, posy, endx, cropx, cropy);
 					break;
 				default:
 					break;
@@ -100,6 +107,32 @@ void createNonSolid(int x, int y, int end, int cx, int cy)
 	nonSolidSize++;
 }
 
+void createAnimated(int x, int y, int speed, int cx, int cy)
+{
+	if (animatedSize == animatedMaxSize) {
+		animatedMaxSize += 10;
+		arrayAnimated = realloc(arrayAnimated, sizeof(struct Tile) * animatedMaxSize);
+		if (arrayAnimated == NULL) {
+			printf("arrayAnimated == NULL\n");
+		}
+	}
+
+	struct Tile new;
+	new.crop.x = cx;
+	new.crop.y = cy;
+	new.crop.w = TILE_CROP_SIZE;
+	new.crop.h = TILE_CROP_SIZE;
+
+	new.pos.x = x;
+	new.pos.y = y;
+	new.pos.w = TILE_SIZE;
+	new.pos.h = TILE_SIZE;
+
+	new.endpos = speed;
+
+	arrayAnimated[animatedSize] = new;
+	animatedSize++;
+}
 void createSolid(int x, int y, int end, int cx, int cy)
 {
 	if (solidSize >= solidMaxSize) {
@@ -131,7 +164,7 @@ int deleteTiles(int x, int y)
 	int indexOfTaken = 0;
 	int isTaken = 0;
 	
-// First checking if the position contains a solid tile and delete that, and 2nd a nonsolid tile.
+// First checking if the position contains a solid then an animated and last nonsolid
 	
 	for (int i = 0; i < solidSize; i++) {
 		if (arraySolid[i].pos.x == x && arraySolid[i].pos.y == y) {
@@ -147,7 +180,22 @@ int deleteTiles(int x, int y)
 		solidSize--;
 		return 0;
 	}
-	
+//--------------------------------
+   	for (int i = 0; i < animatedSize; i++) {
+		if (arrayAnimated[i].pos.x == x && arrayAnimated[i].pos.y == y) {
+			indexOfTaken = i;
+			isTaken = 1;
+			break;
+		}
+	}
+	if (isTaken) {
+		for (int i = indexOfTaken; i < animatedSize; i++) {
+			arrayAnimated[i] = arrayAnimated[i+1];
+		}
+		animatedSize--;
+		return 0;
+	}
+//---------------------	
 	for (int i = 0; i < nonSolidSize; i++) {
 		if (arrayNonSolid[i].pos.x == x && arrayNonSolid[i].pos.y == y) {
 			indexOfTaken = i;
@@ -163,12 +211,14 @@ int deleteTiles(int x, int y)
 		return 0;
 	}
 
+
+
 	return 0;
 }
 
 void gameloop()
 {
-	selected = nonsolid;
+	selected = solid;
 
 	loadTextures();
 
@@ -251,8 +301,8 @@ void checkevent()
 					   break;
 					   
 				   case SDLK_l:
-					   selected = enemy;
-					   printf("selected: enemy\n");
+					   selected = animated;
+					   printf("selected: animated\n");
 					   break;
 
 				   case SDLK_i:
@@ -327,11 +377,12 @@ void checkevent()
 					}else {
 						createNonSolid(activeTileDest.x, activeTileDest.y, 0, activeTileCrop.x, activeTileCrop.y); 
 					}
-				} else if (selected == enemy) {
+				} else if (selected == animated) {
 					if (showCollection) {
-						
+						setActiveCrop(activeTileDest.x, activeTileDest.y);
+						showCollection = 0;
 					}else {
-						
+						createAnimated(activeTileDest.x, activeTileDest.y, 2, activeTileCrop.x, activeTileCrop.y);
 					}
 				} else if (selected == erase) {
 					
@@ -403,6 +454,10 @@ void movement(int x, int y)
 		arraySolid[i].pos.y += y;
 		arrayNonSolid[i].endpos += x;
 	}
+	for (int i = 0; i < animatedSize; i++) {
+		arrayAnimated[i].pos.x += x;
+		arrayAnimated[i].pos.y += y;
+	}
 }
 
 void HELP()
@@ -424,6 +479,9 @@ void render()
 	for (int i = 0; i < solidSize; i++) {
 		SDL_RenderCopy(gRender, solidSprite, &arraySolid[i].crop, &arraySolid[i].pos);
 	}
+	for (int i = 0; i < animatedSize; i++) {
+		SDL_RenderCopy(gRender, animationSprite, &arrayAnimated[i].crop, &arrayAnimated[i].pos);
+	}
 
 	if (showCollection) {
 	  
@@ -431,8 +489,8 @@ void render()
 			SDL_RenderCopy(gRender, nonSolidSprite, NULL, &nonSolidWH);
 		}else if (selected == solid) {
 			SDL_RenderCopy(gRender, solidSprite, NULL, &solidWH);
-		}else if (selected == enemy){
-			SDL_RenderCopy(gRender, enemySprite, NULL, &enemyWH);
+		}else if (selected == animated){
+			SDL_RenderCopy(gRender, animationSprite, NULL, &animationWH);
 		}
 		
 	} else {
@@ -441,8 +499,8 @@ void render()
 			SDL_RenderCopy(gRender, nonSolidSprite, &activeTileCrop, &activeTileDest);
 		} else if (selected == solid) {
 			SDL_RenderCopy(gRender, solidSprite, &activeTileCrop, &activeTileDest);
-		} else if (selected == enemy) {
-			SDL_RenderCopy(gRender, enemySprite, &activeTileCrop, &activeTileDest);
+		} else if (selected == animated) {
+			SDL_RenderCopy(gRender, animationSprite, &activeTileCrop, &activeTileDest);
 		} else if (selected == erase) {
 			SDL_RenderCopy(gRender, editorSprite, &eraserSymbol, &activeTileDest);
 		}
@@ -523,6 +581,22 @@ void loadTextures()
 	
 //------------------------------------------
 
+	loadSurf = IMG_Load("animation.png");
+
+	if (loadSurf == NULL) {
+		printf("%s\n", SDL_GetError());
+	}
+
+	animationSprite = SDL_CreateTextureFromSurface(gRender, loadSurf);
+
+	if (animationSprite == NULL) {
+		printf("%s\n", SDL_GetError());
+	}
+
+	SDL_FreeSurface(loadSurf);
+	
+//-------------------------------------------
+	
 	nonSolidWH.x = 0;
 	nonSolidWH.y = 0;
 	SDL_QueryTexture(nonSolidSprite, NULL, NULL, &nonSolidWH.w, &nonSolidWH.h);
@@ -535,6 +609,10 @@ void loadTextures()
 	enemyWH.y = 0;
 	SDL_QueryTexture(enemySprite, NULL, NULL, &enemyWH.w, &enemyWH.h);
 
+	animationWH.x = 0;
+	animationWH.y = 0;
+	SDL_QueryTexture(animationSprite, NULL, NULL, &animationWH.w, &animationWH.h);
+	
 	eraserSymbol.x = 0;
 	eraserSymbol.y = 0;
 	eraserSymbol.w = TILE_CROP_SIZE;
@@ -555,6 +633,10 @@ void saveToFile()
 			fprintf(file, "%d %d %d %d %d %d\n", 1, arraySolid[i].pos.x - corrx, arraySolid[i].pos.y - corry,
 					arraySolid[i].endpos - corrx, arraySolid[i].crop.x, arraySolid[i].crop.y);
 		}
+		for (int i = 0; i < animatedSize; i++) {
+			fprintf(file, "%d %d %d %d %d %d\n", 2, arrayAnimated[i].pos.x - corrx, arrayAnimated[i].pos.y - corry,
+					arrayAnimated[i].endpos - corrx, arrayAnimated[i].crop.x, arrayAnimated[i].crop.y);
+		}
 		fclose(file);
 		printf("saved to file: %s\n", filepath);
 	}
@@ -562,11 +644,15 @@ void saveToFile()
 
 void quit()
 {
+	free(arrayAnimated);
+	arrayAnimated = NULL;
 	free(arrayNonSolid);
 	arrayNonSolid = NULL;
 	free(arraySolid);
 	arraySolid = NULL;
 
+	SDL_DestroyTexture(animationSprite);
+	animationSprite = NULL;
 	SDL_DestroyTexture(editorSprite);
 	editorSprite = NULL;
 	SDL_DestroyTexture(solidSprite);
