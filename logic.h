@@ -22,13 +22,18 @@ int playerSpeedX;
 int playerSpeedY;
 int maxHeight;
 
+int camx;
+int camy;
+int stillTimer;
+
 int initLogic();
 
-int stillTimer;
 void standingStillForLong();
 void playerJump();
 void playerMovement();
 void checkCollision();
+void checkIfPlayerMoveCam();
+void moveCam();
 void updateLogic();
 void gameLogic();
 void menuLogic();

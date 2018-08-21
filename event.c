@@ -41,13 +41,13 @@ void gameEvent()
 			case SDL_KEYUP:
 				switch (event.key.keysym.sym) {
 					case SDLK_LEFT:
-						if (playerStatus == left) {
-							playerStatus = still;							
+						if (playerStatus != right) {
+							playerStatus = still;
 						}
 						break;
 					case SDLK_RIGHT:
-						if (playerStatus == right) {
-							playerStatus = still; 
+						if (playerStatus != left) {													
+							playerStatus = still;
 						}
 						break;
 					default:

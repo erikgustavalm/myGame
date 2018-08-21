@@ -31,19 +31,29 @@ void animatePlayerJumping()
 
 void animatePlayerLongStill()
 {
-	if (3 < playerTimer < 10) {
-		if (playerTimer < 5) {
-			playerCrop.x = PLAYER_TILE * 9;
-		}
-		if (playerTimer > 5) {
-			playerCrop.x = PLAYER_TILE * 10;
-		}
-		if (playerTimer == 9) {
-			playerTimer = 0;
-		}
-	} else {
+
+	if (0 < playerTimer && playerTimer < 10) {
+		playerCrop.x = PLAYER_TILE * 9;
+	}
+	if (10 < playerTimer && playerTimer < 12) {
+		playerCrop.x = PLAYER_TILE * 10;
+	}
+	if (12 < playerTimer && playerTimer < 22) {
+		playerCrop.x = PLAYER_TILE * 9;
+	}
+	if (22 < playerTimer && playerTimer < 24) {
+		playerCrop.x = PLAYER_TILE * 10;
+	}
+	if (24 <  playerTimer && playerTimer < 64) {
+		playerCrop.x = PLAYER_TILE * 9;
+	}
+	if (64 < playerTimer && playerTimer < 100) {
 		playerCrop.x = 0;
 	}
+	if (playerTimer == 100) {
+		playerTimer = 0;
+	}
+
 	playerTimer++;
 }
 

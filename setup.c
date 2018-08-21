@@ -6,8 +6,8 @@ void helpFunction()
 	if (playerCondition == onground) {		
 		printf("player onground\n");
 	}
-	playerPos.y = 32;
-	playerPos.x = 32;
+	playerPos.y = 130;
+	playerPos.x = SCREEN_W / 2;
 	
 }
 
