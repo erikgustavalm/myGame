@@ -1,9 +1,0 @@
-#include "render.h"
-
-void render()
-{
-	SDL_RenderClear(gRender);
-
-	SDL_RenderPresent(gRender);
-}
-	

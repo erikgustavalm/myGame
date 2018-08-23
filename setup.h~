@@ -1,9 +1,0 @@
-#ifndef _SETUP_H_
-#define _SETUP_H_
-
-#include "game.h"
-
-int setupSDL();
-void setupQuit();
-
-#endif
