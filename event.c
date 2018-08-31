@@ -16,11 +16,10 @@ void gameEvent()
 						menu = 1;
 						break;
 					case SDLK_h:
-						if (showMessage) {
-							showMessage = 0;
-						} else {
-							showMessage = 1;
-						}
+						showMsg("abba", 4);
+						break;
+					case SDLK_y:
+						stopShowMsg();
 						break;
 					case SDLK_LEFT:
 						if (playerStatus == still || playerStatus == longstill) {
@@ -53,7 +52,7 @@ void gameEvent()
 						if (playerStatus != left) {													
 							playerStatus = still;
 						}
-						break;
+						break;				    
 					default:
 						break;
 				}

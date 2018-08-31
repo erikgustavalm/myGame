@@ -2,6 +2,7 @@
 #define _RENDER_H_
 
 #include "game.h"
+#include "message.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -14,6 +15,7 @@ SDL_Texture* solidSprite;
 SDL_Texture* animationSprite;
 SDL_Texture* menusprite;
 SDL_Texture* messageBoxSprite;
+SDL_Texture* fontSprite;
 SDL_Rect menuPos;
 
 int playerTimer;

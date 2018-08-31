@@ -131,6 +131,9 @@ void drawGame()
 	
 	if (showMessage == 1) {
 		SDL_RenderCopy(gRender, messageBoxSprite, &messageBox.crop, &messageBox.pos);
+		for (int i = 0; i < messageSize; i++) {
+			SDL_RenderCopy(gRender, fontSprite, &messageArray[i].crop, &messageArray[i].pos);
+		}
 	}
 }
 
@@ -189,6 +192,11 @@ int loadTextures()
 	if (messageBoxSprite == NULL) {
 		return 0;
 	}
+
+	fontSprite = loadText("DATA/font.png");
+	if (fontSprite == NULL) {
+		return 0;
+	}
 	
 	return 1;
 }
@@ -217,6 +225,8 @@ int initRender()
 
 void killRender()
 {
+	SDL_DestroyTexture(fontSprite);
+	fontSprite = NULL;
 	SDL_DestroyTexture(messageBoxSprite);
 	messageBoxSprite = NULL;
 	SDL_DestroyTexture(animationSprite);

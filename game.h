@@ -5,6 +5,7 @@
 #include "event.h"
 #include "render.h"
 #include "logic.h"
+#include "message.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
