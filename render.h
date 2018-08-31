@@ -13,6 +13,7 @@ SDL_Texture* nonSolidSprite;
 SDL_Texture* solidSprite;
 SDL_Texture* animationSprite;
 SDL_Texture* menusprite;
+SDL_Texture* messageBoxSprite;
 SDL_Rect menuPos;
 
 int playerTimer;

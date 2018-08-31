@@ -635,7 +635,7 @@ void saveToFile()
 		}
 		for (int i = 0; i < animatedSize; i++) {
 			fprintf(file, "%d %d %d %d %d %d\n", 2, arrayAnimated[i].pos.x - corrx, arrayAnimated[i].pos.y - corry,
-					arrayAnimated[i].endpos - corrx, arrayAnimated[i].crop.x, arrayAnimated[i].crop.y);
+					arrayAnimated[i].endpos, arrayAnimated[i].crop.x, arrayAnimated[i].crop.y);
 		}
 		fclose(file);
 		printf("saved to file: %s\n", filepath);

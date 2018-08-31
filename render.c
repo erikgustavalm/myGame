@@ -105,7 +105,7 @@ void drawPlayer()
 void animateObjects()
 {
 	for (int i = 0; i < sizeAnimated; i++) {
-		if (arrayAnimated[i].timer < arrayAnimated[i].speed) {
+		if (arrayAnimated[i].timer < arrayAnimated[i].speed) {		   
 			arrayAnimated[i].timer++;
 		} else {
 			arrayAnimated[i].crop.y += arrayAnimated[i].crop.h;
@@ -128,6 +128,10 @@ void drawGame()
 	}
 	animateObjects();
 	drawPlayer();
+	
+	if (showMessage == 1) {
+		SDL_RenderCopy(gRender, messageBoxSprite, &messageBox.crop, &messageBox.pos);
+	}
 }
 
 void drawMenu()
@@ -175,10 +179,17 @@ int loadTextures()
 	if (playerSprite == NULL) {
 		return 0;
 	}
-	animationSprite= loadText("DATA/animation.png");
+	
+	animationSprite = loadText("DATA/animation.png");
 	if (animationSprite == NULL) {
 		return 0;
 	}
+
+	messageBoxSprite = loadText("DATA/message.png");
+	if (messageBoxSprite == NULL) {
+		return 0;
+	}
+	
 	return 1;
 }
 
@@ -206,6 +217,8 @@ int initRender()
 
 void killRender()
 {
+	SDL_DestroyTexture(messageBoxSprite);
+	messageBoxSprite = NULL;
 	SDL_DestroyTexture(animationSprite);
 	animationSprite = NULL;
 	SDL_DestroyTexture(playerSprite);

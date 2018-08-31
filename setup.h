@@ -33,6 +33,8 @@ struct Animated
 	int speed;
 };
 
+struct NonSolid messageBox;
+
 struct Animated* arrayAnimated;
 int sizeAnimated;
 int maxSizeAnimated;
@@ -55,5 +57,7 @@ void setupQuit();
 void createNonSolid(int x, int y, int cx, int cy);
 void createSolid(int x, int y, int end, int cx, int cy);
 void createAnimated(int x, int y, int speed, int cx, int cy);
+
+void initMessageBox();
 
 #endif

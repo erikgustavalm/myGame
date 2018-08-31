@@ -33,7 +33,7 @@ void createAnimated(int x, int y, int speed, int cx, int cy)
 
 	new.speed = speed;
 	new.timer = 0;
-
+	
 	arrayAnimated[sizeAnimated] = new;
 	sizeAnimated++;
 }
@@ -165,12 +165,27 @@ int setupSDL()
 		if (arrayAnimated == NULL) {
 			printf("init mem alloc arrayAnimated failed\n");
 		}
+
+		initMessageBox();
 		
 		return 1;
 	}
 	
 	return 0;
 	
+}
+
+void initMessageBox()
+{
+		messageBox.pos.x = 64;
+		messageBox.pos.y = SCREEN_H - (4* TILE_H);
+		messageBox.pos.w = SCREEN_W - 128;
+		messageBox.pos.h = (4 * TILE_H);
+
+		messageBox.crop.x = 0;
+		messageBox.crop.y = 0;
+		messageBox.crop.w = 128;
+		messageBox.crop.h = 64;	
 }
 
 void setupQuit()

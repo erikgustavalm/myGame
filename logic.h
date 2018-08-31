@@ -15,6 +15,8 @@ enum PlayerStatus playerStatus;
 enum PlayerCondition {onground, jumping, falling};
 enum PlayerCondition playerCondition;
 
+int showMessage;
+
 SDL_Rect playerPos;
 SDL_Rect playerCrop;
 

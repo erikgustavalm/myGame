@@ -16,7 +16,11 @@ void gameEvent()
 						menu = 1;
 						break;
 					case SDLK_h:
-						helpFunction();
+						if (showMessage) {
+							showMessage = 0;
+						} else {
+							showMessage = 1;
+						}
 						break;
 					case SDLK_LEFT:
 						if (playerStatus == still || playerStatus == longstill) {

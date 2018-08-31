@@ -1,3 +1,4 @@
+
 #include "logic.h"
 
 
@@ -143,6 +144,10 @@ void moveCam()
 			arrayNonSolid[i].pos.x += camx;
 			arrayNonSolid[i].pos.y += camy;
 		}
+		for (int i = 0; i < sizeAnimated; i++) {
+			arrayAnimated[i].pos.x += camx;
+			arrayAnimated[i].pos.y += camy;
+		}
 	}
     
 }
@@ -176,6 +181,8 @@ int initLogic()
 	playerStatus = still;
 	playerCondition = falling;
 
+	showMessage = 0;
+	
 	stillTimer = 0;
 	
 	playerSpeedX = 5;
