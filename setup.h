@@ -46,7 +46,6 @@ int maxSizeSolid;
 struct NonSolid* arrayNonSolid;
 int sizeNonSolid;
 int maxSizeNonSolid;
-
 int levelLoaded;
 
 int setupSDL();

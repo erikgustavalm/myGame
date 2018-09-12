@@ -16,7 +16,7 @@ void gameEvent()
 						menu = 1;
 						break;
 					case SDLK_h:
-						showMsg("abba", 4);
+						showMsg("abcdefghijklmnopqrstuvwxyz ?:!", 30);
 						break;
 					case SDLK_y:
 						stopShowMsg();

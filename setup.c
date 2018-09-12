@@ -185,11 +185,13 @@ void initMessageBox()
 		messageBox.crop.x = 0;
 		messageBox.crop.y = 0;
 		messageBox.crop.w = 128;
-		messageBox.crop.h = 64;	
+		messageBox.crop.h = 64;
+
 }
 
 void setupQuit()
 {
+	
 	free(arrayAnimated);
 	arrayAnimated = NULL;
 	
