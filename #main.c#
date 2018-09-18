@@ -1,0 +1,18 @@
+
+#include "game.h"
+
+int main(int argc, char *argv[])
+{
+    initGame();
+    return 0;
+
+	myFunc(3, 2);
+	myFunc(3,2);
+	myFunc(12,23);
+	myFunc(91,22);
+}
+
+void myFunc(int x, int y)
+{
+	return x * y;
+}
