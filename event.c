@@ -15,27 +15,33 @@ void gameEvent()
 					case SDLK_ESCAPE:
 						menu = 1;
 						break;
+						
 					case SDLK_h:
 						showMsg("abcdefghijklmnopqrstuvwxyz ?:!", 30);
 						break;
+						
 					case SDLK_y:
 						stopShowMsg();
 						break;
+						
 					case SDLK_LEFT:
 						if (playerStatus == still || playerStatus == longstill) {
 							playerStatus = left;
 						}
 						break;
+						
 					case SDLK_RIGHT:
 						if (playerStatus == still || playerStatus == longstill) {
 							playerStatus = right;
 						}
 						break;
+						
 					case SDLK_UP:
 						if (playerCondition == onground) {
 							playerJump();
 						}
 						break;
+						
 					default:
 						break;
 				}
@@ -48,11 +54,13 @@ void gameEvent()
 							playerStatus = still;
 						}
 						break;
+						
 					case SDLK_RIGHT:
 						if (playerStatus != left) {													
 							playerStatus = still;
 						}
-						break;				    
+						break;
+						
 					default:
 						break;
 				}
@@ -77,11 +85,13 @@ void menuEvent()
 					case SDLK_ESCAPE:
 					    running = 0;
 						break;
+						
 					case SDLK_RETURN:
 						if (option == start) {
 							menu = 0;
 						}
 						break;
+						
 					default:
 						break;
 				}
