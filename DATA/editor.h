@@ -7,8 +7,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#define TILE_SIZE 32
-#define TILE_CROP_SIZE 32
+#define TILE_CROP_H 64
+#define TILE_CROP_W 128
 
 struct Tile
 {
@@ -17,7 +17,7 @@ struct Tile
 	int endpos;
 };
 
-enum Selection {solid, nonsolid, enemy, animated, erase};
+enum Selection {erase, obj, ground};
 enum Selection selected;
 
 int running;
@@ -35,16 +35,15 @@ int camDown;
 SDL_Window* gWindow;
 SDL_Renderer* gRender;
 
-SDL_Texture* nonSolidSprite;
-SDL_Rect nonSolidWH;
-SDL_Texture* solidSprite;
-SDL_Rect solidWH;
-SDL_Texture* enemySprite;
-SDL_Rect enemyWH;
-SDL_Texture* animationSprite;
-SDL_Rect animationWH;
+SDL_Texture* groundSprite;
+SDL_Rect groundWH;
+
+SDL_Texture* houseSprite;
+SDL_Rect houseWH;
+
 SDL_Texture* editorSprite;
 SDL_Rect eraserSymbol;
+SDL_Rect activeEditorDest;
 
 SDL_Rect activeTileDest;
 SDL_Rect activeTileCrop;
@@ -52,17 +51,13 @@ SDL_Rect activeTileCrop;
 
 
 
-struct Tile* arrayNonSolid;
-int nonSolidMaxSize;
-int nonSolidSize;
+struct Tile* arrayGround;
+int groundMaxSize;
+int groundSize;
 
-struct Tile* arraySolid;
-int solidMaxSize;
-int solidSize;
-
-struct Tile* arrayAnimated;
-int animatedMaxSize;
-int animatedSize;
+struct Tile* arrayObject;
+int objectMaxSize;
+int objectSize;
 
 char filepath[30];
 
@@ -72,10 +67,10 @@ int deleteTiles(int x, int y);
 
 void initEditor(char* level);
 void loadTextures();
-void createNonSolid(int x, int y, int end, int cx, int cy);
-void createSolid(int x, int y, int end, int cx, int cy);
-void createAnimated(int x, int y, int speed, int cx, int cy);
+void createGround(int x, int y, int cx, int cy);
+void createObject(int x, int y, int cx, int cy);
 void setActiveCrop(int x, int y);
+void setActiveEditorCrop(int x, int y);
 void movement(int x, int y);
 void HELLP();
 void gameloop();
