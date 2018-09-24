@@ -82,12 +82,12 @@ void createObject(int x, int y, int cx, int cy)
 	struct Tile new;
 	new.crop.x = cx;
 	new.crop.y = cy;
-	new.crop.w = TILE_CROP_W *2;
+	new.crop.w = TILE_CROP_W;
 	new.crop.h = TILE_CROP_H *2;
 
 	new.pos.x = x;
 	new.pos.y = y;
-	new.pos.w = TILE_CROP_W * 2;
+	new.pos.w = TILE_CROP_W;
 	new.pos.h = TILE_CROP_H * 2;
 
 	arrayObject[objectSize] = new;
@@ -464,7 +464,7 @@ void loadTextures()
 
 //-------------------------------------------	
 
-	loadSurf = IMG_Load("house.png");
+	loadSurf = IMG_Load("tree.png");
 
 	if (loadSurf == NULL) {
 		printf("%s\n", SDL_GetError());
