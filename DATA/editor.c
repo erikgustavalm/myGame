@@ -83,7 +83,7 @@ void createObject(int x, int y, int cx, int cy)
 	new.crop.x = cx;
 	new.crop.y = cy;
 	new.crop.w = TILE_CROP_W;
-	new.crop.h = TILE_CROP_H *2;
+	new.crop.h = TILE_CROP_H * 2;
 
 	new.pos.x = x;
 	new.pos.y = y;
@@ -495,6 +495,8 @@ void loadTextures()
 
 void saveToFile()
 {
+
+	sortObjects();
 	FILE* file = fopen(filepath, "w");
 	if (file == NULL) {
 		printf("%s:could not be open for saving\n", filepath );
@@ -509,6 +511,21 @@ void saveToFile()
 		}
 		fclose(file);
 		printf("saved to file: %s\n", filepath);
+	}
+}
+
+void sortObjects()
+{
+    
+	for (int i = 0; i < objectSize; i++) {
+		for (int j = 0; j < objectSize; j++) {
+			if (arrayObject[i].pos.y < arrayObject[j].pos.y) {
+
+				int tmp = arrayObject[i].pos.y;
+				arrayObject[i].pos.y = arrayObject[j].pos.y;
+				arrayObject[j].pos.y = tmp;
+			}
+		}
 	}
 }
 

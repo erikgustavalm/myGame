@@ -78,6 +78,7 @@ void update();
 void checkevent();
 void render();
 void saveToFile();
+void sortObjects();
 void quit();
 
 #endif
